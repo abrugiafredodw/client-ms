@@ -8,7 +8,6 @@ export class ErrorFilter implements ExceptionFilter{
         const res = context.getResponse();
         const statusCode = exception.getStatus();
         return res.status(statusCode).json({
-            mensajePersonalizado: 'Hubo un error',
             error: exception.message,
             errorCode: statusCode,
         });

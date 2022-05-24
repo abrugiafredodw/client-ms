@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClientModule } from './client/client.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -12,8 +13,10 @@ import { ClientModule } from './client/client.module';
           uri: configService.get('MONGO_URL'),
         };
       },
+      inject: [ConfigService]
     }),
     ClientModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [],
