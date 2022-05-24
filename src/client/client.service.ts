@@ -1,26 +1,81 @@
-import { Injectable } from '@nestjs/common';
-import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
+import {Injectable} from '@nestjs/common';
+import {CreateClientDto} from './dto/create-client.dto';
+import {UpdateClientDto} from './dto/update-client.dto';
+import {Client} from "./schema/client.schema";
+import {ClientRepository} from "./repository/client.repository";
+import {ClientException} from "./exception/client.exception";
 
 @Injectable()
 export class ClientService {
-  create(createClientDto: CreateClientDto) {
-    return 'This action adds a new client';
+
+  constructor(private readonly clientRepository: ClientRepository) {
   }
 
-  findAll() {
-    return `This action returns all client`;
+  async create(createClientDto: CreateClientDto):Promise<Client> {
+    try {
+      const options={
+        mail:createClientDto.mail
+      }
+      const client=await this.clientRepository.findOne(options);
+      if(client!=null){
+        throw new ClientException(`El cliente con el mal ${createClientDto.mail} ya se encuentra registrado`)
+      }
+      return await this.clientRepository.createClients(createClientDto);
+    }catch (Error:any){
+      throw Error;
+    }
+
   }
 
-  findOne(options: any) {
-    return `This action returns a #${options} client`;
+ async findAll():Promise<Client[]> {
+    return this.clientRepository.findAll();
   }
 
-  update(updateClientDto: UpdateClientDto) {
-    return `This action updates a #${updateClientDto} client`;
+  async findOne(options: any):Promise<Client> {
+    try {
+      const client=await this.clientRepository.findOne(options);
+      if(client==null){
+        throw new ClientException(`El cliente no existe`)
+      }
+      return client;
+    }catch (Error:any){
+      throw Error;
+    }
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} client`;
+ async update(updateClientDto: UpdateClientDto):Promise<Client> {
+    try {
+      const options={
+        _id: updateClientDto._id
+      };
+      const client=await this.clientRepository.findOne(options);
+      if(client==null){
+        throw new ClientException(`El cliente que intentas modificar no existe`)
+      }
+      return this.clientRepository.updateClients(updateClientDto);
+    }catch (Error:any){
+      throw Error;
+    }
+  }
+
+  async remove(id: string):Promise<Client> {
+    try {
+      const options={
+        _id: id
+      };
+      const client=await this.clientRepository.findOne(options);
+      if(client==null){
+        throw new ClientException(`El cliente que intentas eliminar no existe`)
+      }
+      let updateCliente:UpdateClientDto={
+        _id: id,
+        name: client.name,
+        mail: client.mail,
+        avail:false
+      }
+      return await this.clientRepository.updateClients(updateCliente);
+    }catch (Error:any){
+      throw Error;
+    }
   }
 }
