@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClientModule } from './client/client.module';
 import { HealthModule } from './health/health.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -13,10 +14,27 @@ import { HealthModule } from './health/health.module';
           uri: configService.get('MONGO_URL'),
         };
       },
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     ClientModule,
     HealthModule,
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        return {
+          pinoHttp: {
+            name: config.get('LOG_NAME'),
+            level: config.get('LOG_LEVEL'),
+            transport:
+              config.get('ENV') === 'prod'
+                ? { target: config.get('LOG_TRANSPORT') }
+                : undefined,
+            useLevelLabels: true,
+          },
+        };
+      },
+    }),
   ],
   controllers: [],
   providers: [],
