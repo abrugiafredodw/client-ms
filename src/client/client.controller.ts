@@ -28,14 +28,11 @@ export class ClientController {
 
   @Get(':mail')
   findOne(@Param('mail') mail: string): Promise<Client> {
-    try {
-      const options = {
+     const options = {
         mail: mail,
       };
       return this.clientService.findOne(options);
-    } catch (Error: any) {
-      throw Error;
-    }
+
   }
 
   @Get(':mail/avail')

@@ -5,6 +5,7 @@ export type ClientDocument = Client & Document;
 
 @Schema()
 export class Client{
+    _id:string
     @Prop({
         required:true
     })
