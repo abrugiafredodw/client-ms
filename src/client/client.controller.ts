@@ -26,6 +26,14 @@ export class ClientController {
     return this.clientService.findAll();
   }
 
+  @Get('avail')
+  findAllAvail(): Promise<Client[]> {
+    const options={
+      avail:true,
+    }
+    return this.clientService.findAll(options);
+  }
+
   @Get(':mail')
   findOne(@Param('mail') mail: string): Promise<Client> {
      const options = {

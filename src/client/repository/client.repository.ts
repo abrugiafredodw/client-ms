@@ -21,8 +21,8 @@ export class ClientRepository {
     return clientCreate.save();
   }
 
-  async findAll(): Promise<Client[]> {
-    return this.clientMD.find().exec();
+  async findAll(options?:any): Promise<Client[]> {
+    return this.clientMD.find(options).exec();
   }
 
   async findOne(options?: any): Promise<Client> {

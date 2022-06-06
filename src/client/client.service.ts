@@ -17,7 +17,7 @@ export class ClientService {
       const client = await this.clientRepository.findOne(options);
       if (client != null) {
         throw new ClientException(
-          `El cliente con el mal ${createClientDto.mail} ya se encuentra registrado`,
+          `El cliente con el mail ${createClientDto.mail} ya se encuentra registrado`,
         );
       }
       return await this.clientRepository.createClients(createClientDto);
@@ -26,8 +26,8 @@ export class ClientService {
     }
   }
 
-  async findAll(): Promise<Client[]> {
-    return this.clientRepository.findAll();
+  async findAll(options?: any): Promise<Client[]> {
+    return this.clientRepository.findAll(options);
   }
 
   async findOne(options: any): Promise<Client> {
