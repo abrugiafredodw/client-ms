@@ -17,11 +17,14 @@ export class ClientRepository {
   }
 
   async updateClients(updateClient: UpdateClientDto): Promise<Client> {
-    const clientCreate = new this.clientMD(updateClient);
-    return clientCreate.save();
+    return this.clientMD.findByIdAndUpdate(
+      { _id: updateClient._id },
+      updateClient,
+      { new: true },
+    );
   }
 
-  async findAll(options?:any): Promise<Client[]> {
+  async findAll(options?: any): Promise<Client[]> {
     return this.clientMD.find(options).exec();
   }
 

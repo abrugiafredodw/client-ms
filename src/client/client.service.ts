@@ -16,9 +16,19 @@ export class ClientService {
       };
       const client = await this.clientRepository.findOne(options);
       if (client != null) {
-        throw new ClientException(
-          `El cliente con el mail ${createClientDto.mail} ya se encuentra registrado`,
-        );
+        if (client.avail) {
+          throw new ClientException(
+            `El cliente con el mail ${createClientDto.mail} ya se encuentra registrado`,
+          );
+        } else {
+          const updateClientDTO: UpdateClientDto = {
+            _id: client._id,
+            name: client.name,
+            mail: client.mail,
+            avail: true,
+          };
+          return await this.clientRepository.updateClients(updateClientDTO);
+        }
       }
       return await this.clientRepository.createClients(createClientDto);
     } catch (Error: any) {
@@ -53,6 +63,7 @@ export class ClientService {
           `El cliente que intentas modificar no existe`,
         );
       }
+      updateClientDto.avail = client.avail;
       return this.clientRepository.updateClients(updateClientDto);
     } catch (Error: any) {
       throw Error;
