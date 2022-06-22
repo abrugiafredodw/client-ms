@@ -28,19 +28,27 @@ export class ClientController {
 
   @Get('avail')
   findAllAvail(): Promise<Client[]> {
-    const options={
-      avail:true,
-    }
+    const options = {
+      avail: true,
+    };
     return this.clientService.findAll(options);
   }
 
   @Get(':mail')
   findOne(@Param('mail') mail: string): Promise<Client> {
-     const options = {
-        mail: mail,
-      };
-      return this.clientService.findOne(options);
+    const options = {
+      mail: mail,
+    };
+    return this.clientService.findOne(options);
+  }
 
+  @Get('id/:id/avail')
+  findOneId(@Param('id') id: string): Promise<Client> {
+    const options = {
+      _id: id,
+      avail: true,
+    };
+    return this.clientService.findOne(options);
   }
 
   @Get(':mail/avail')
