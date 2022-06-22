@@ -1,14 +1,10 @@
 NOTE: update this with your service name
 service: client-ms
 
-# Create an optimized package for our functions
-package:
-  individually: true
 
 useDotenv: true
 
 plugins:
-#  - serverless-plugin-optimize
   - serverless-dotenv-plugin
   - serverless-offline
 
